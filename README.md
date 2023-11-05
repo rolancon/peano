@@ -1,2 +1,2 @@
-# peono
-Peono numbers and math
+# Peano
+Peano numbers and math
