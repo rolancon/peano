@@ -8,4 +8,4 @@ Type either a sum or a multiplication after the **> ** prompt:
     > 10 * 10
     100
 
-The numbers have to be integers, but can be of arbitrary length. Simply pressing the Enter (Return) key will exit your session.
+The numbers have to be integers, and must be separared from the operators with spaces, but can be of arbitrary length. Simply pressing the Enter (Return) key will exit your session.
