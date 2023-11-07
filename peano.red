@@ -35,7 +35,6 @@ predecessors: func [index left right] [
   if right <> #"0" [
     successor index left
     switch right [
-	 ;#"0" is never reached
       #"1" []
       #"2" [predecessors index left #"1"]
       #"3" [predecessors index left #"2"]
@@ -49,19 +48,64 @@ predecessors: func [index left right] [
   ]
 ]
 
+predecessor: func [right first-digit?] [
+  switch right [
+    #"0" [none] ;#"9"
+    #"1" [#"0"] ;[either first-digit? [none]]
+    #"2" [#"1"]
+    #"3" [#"2"]
+    #"4" [#"3"]
+    #"5" [#"4"]
+    #"6" [#"5"]
+    #"7" [#"6"]
+    #"8" [#"7"]
+    #"9" [#"8"]
+  ]
+]
+
 addition: func [l r left right] [
-  either l = "0" [print r exit] [if r = "0" [print l exit]]
+  either l = "0" [return r] [if r = "0" [return l]]
   forall right [predecessors (index? right) left right/1]
-  prin "result: " print reverse left
-  print ""
+  left
 ]
 
 subtraction: func [l r left right] [
-  either l = "0" [print rejoin ["-" r] exit] [if r = "0" [print l exit]]
+  either l = "0" [rejoin [r "-"]] [if r = "0" [l]]
 ]
 
 multiplication: func [l r left right] [
-  if any [l = "0" r = "0"] [print "0" exit]
+  prin "multi l " print l
+  prin "multi r " print r
+  prin "left " print l
+  prin "right " print r
+  if any [l = "0" r = "0"] [return "0"]
+  ;either l = "1" [return r] [if r = "1" [return l]]
+  adder: copy left
+  sum: copy "0"
+  offset: #"0"
+  ;prin "offset: " print offset
+  
+  forall right [
+    prin "adder: " print adder
+    p: predecessor right/1 empty? adder
+   
+    while [char? p] [ ;until [
+      prin "p: " print p
+      prin "intermediate result: " print sum  
+      sum: addition l r sum adder
+      p: predecessor p empty? adder
+      ;none? p
+    ]
+  
+    ;append adder offset
+    adder: rejoin [offset adder]
+  ]
+  sum
+]
+
+power-of: func [l r left right] [
+  if any [l = "0" r = "0"] [return "0"]
+  either l = "1" ["1"] [if r = "1" [l]]
 ]
 
 calc: func [sum] [
@@ -79,16 +123,17 @@ calc: func [sum] [
     "+" [addition l r left right]
     "-" [subtraction l r left right]
     "*" [multiplication l r left right]
+    "**" [power-of l r left right]
   ]
 ]
 
 ; ToDo
 ; negative numbers, minus
-; multiplication, power of
+; power of
 ; division, root of
 ; fracions, reals
 ; multiples, mixing
-; grouping, parens
+; grouping/parens
 
 calc "0 + 0"
 calc "0 + 1"
@@ -102,7 +147,13 @@ calc "0 * 0"
 calc "0 * 1"
 calc "1 * 0"
 
+calc "0 ** 0"
+calc "0 ** 1"
+calc "1 ** 0"
+
 forever [
   s: ask "> "
-  calc s
+  if s = "" [break]
+  result: calc s
+  print reverse result
 ]
