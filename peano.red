@@ -1,19 +1,13 @@
 Red []
 
 next: func [left index number] [
-  ;prin "left: " print left
-  ;prin "index: " print index
-  ;prin "number: " print number
-  ;prin "type number: " print type? number
   left/(:index): number
-  ;prin "new left/:index: " print left/:index
 ]
 
 successor: func [index left] [
   li: left/:index
   if li = none [append left #"0" li: left/:index]
-  ;prin "li: " print li
-  ;prin "type li: " print type? li
+
   switch li [
     #"0" [next left index #"1"]
     #"1" [next left index #"2"]
@@ -29,11 +23,9 @@ successor: func [index left] [
 ]
 
 predecessors: func [index left right] [
-  ;prin "index: " print index
-  ;prin "right: " print right
-  ;prin "type? right: " print type? right
   if right <> #"0" [
     successor index left
+
     switch right [
       ;#"0"
       #"1" []
@@ -75,33 +67,21 @@ subtraction: func [l r left right] [
 ]
 
 multiplication: func [l r left right] [
-  prin "multi l " print l
-  prin "multi r " print r
-  prin "left " print l
-  prin "right " print r
   if any [l = "0" r = "0"] [return "0"]
   either l = "1" [return r] [if r = "1" [return l]]
   adder: copy left
-  prin "adder: " print adder
   sum: copy "0"
   offset: #"0"
-  ;prin "offset: " print offset
   
   forall right [
-    prin "index? right: " print (index? right)
     p: predecessor right/1
    
-    while [char? p] [ ;until [
-      prin "p: " print p
-      prin "old intermediate result: " print sum  
+    while [char? p] [
       sum: addition sum adder sum adder
-      prin "new intermediate result: " print sum  
       p: predecessor p
-      ;none? p
     ]
   
     adder: rejoin [offset adder]
-    prin "adder: " print adder
   ]
   sum
 ]
@@ -113,14 +93,11 @@ power-of: func [l r left right] [
 
 calc: func [expr] [
   terms: split expr " "
-  ;prin "terms: " print terms
   l: terms/1
   op: terms/2
   r: terms/3
   left: reverse l
-  ;prin "left: " print left
   right: reverse r
-  ;prin "right: " print right
 
   switch op [
     "+" [addition l r left right]
@@ -138,21 +115,21 @@ calc: func [expr] [
 ; multiples, mixing
 ; grouping/parens
 
-calc "0 + 0"
-calc "0 + 1"
-calc "1 + 0"
+;calc "0 + 0"
+;calc "0 + 1"
+;calc "1 + 0"
 
-calc "0 - 0"
-calc "0 - 1"
-calc "1 - 0"
+;calc "0 - 0"
+;calc "0 - 1"
+;calc "1 - 0"
 
-calc "0 * 0"
-calc "0 * 1"
-calc "1 * 0"
+;calc "0 * 0"
+;calc "0 * 1"
+;calc "1 * 0"
 
-calc "0 ** 0"
-calc "0 ** 1"
-calc "1 ** 0"
+;calc "0 ** 0"
+;calc "0 ** 1"
+;calc "1 ** 0"
 
 forever [
   s: ask "> "
