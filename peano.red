@@ -65,7 +65,7 @@ predecessor0: func [index left] [
 
   switch li [
     #"0" [prin "index: " print index
-          either index > 1 [change left index #"9" it: predecessors (index - 1) left #"1"] [left: "-0" return left]]
+          either index > 1 [change left index #"9" it: predecessors (index - 1) left #"1"] [left: "0" return left]]
     #"1" [change left index #"0"]
     #"2" [change left index #"1"]
     #"3" [change left index #"2"]
@@ -77,18 +77,18 @@ predecessor0: func [index left] [
     #"9" [change left index #"8"]
   ]
 
-  if it = "-0" [return it] 
+  if it = "0" [return it] 
   left
 ]
 
 predecessors: func [index left right] [
-  if all [left <> "0" left <> "-0" right <> #"0"] [
+  if all [left <> "0" right <> #"0"] [
     prin "index: " print index
     prin "left before: " print left
     prin "right: " print right
     left: predecessor0 index left
     prin "left after: " print left
-    if left = "-0" [print "OK" return left]
+    if left = "0" [print "OK" return left]
  
     switch right [
       ;#"0"
@@ -107,8 +107,19 @@ predecessors: func [index left right] [
   ]
 ]
 
-addition: func [l r left right] [
-  either l = "0" [return r] [if r = "0" [return l]]
+addition: func [left right] [
+  either left = "0" [return right] [if right = "0" [return left]]
+
+  ll: length? left
+  lr: length? right
+  prin "ll: " print ll
+  prin "lr: " print lr
+  while [ll < lr] [
+    append left #"0"
+    ll: length? left
+    prin "ll: " print ll
+  ]
+  prin "left: " print left
 
   forall right [successors (index? right) left right/1]
 
@@ -116,7 +127,7 @@ addition: func [l r left right] [
 ]
 
 subtraction: func [left right] [
-  either l = "0" [return "-0"] [if r = "0" [return l]]
+  either left = "0" [return left] [if right = "0" [return right]]
   ;either l = "0" [return rejoin [r "-"]] [if r = "0" [return l]]
   ;if any [left = "0" right = "0"] [return left]
 
@@ -139,16 +150,16 @@ subtraction: func [left right] [
   forall right [
     it: predecessors (index? right) left right/1
     print "it: " it
-    if it = "-0" [return it]
+    if it = "0" [return it]
   ]
 
   ;append left sign
   left
 ]
 
-multiplication: func [l r left right] [
-  if any [l = "0" r = "0"] [return "0"]
-  either l = "1" [return r] [if r = "1" [return l]]
+multiplication: func [left right] [
+  if any [left = "0" right = "0"] [return "0"]
+  either left = "1" [return right] [if right = "1" [return left]]
 
   prin "left: " print left
   prin "right: " print right
@@ -176,9 +187,9 @@ multiplication: func [l r left right] [
   plus
 ]
 
-exponentiation: func [l r left right] [
-  if any [l = "0" r = "0"] [return "0"]
-  either l = "1" ["1"] [if r = "1" [l]]
+exponentiation: func [left right] [
+  if any [left = "0" right = "0"] [return "0"]
+  either left = "1" [return "1"] [if right = "1" [return left]]
 
   prin "left: " print left
   prin "right: " print right
@@ -235,10 +246,10 @@ calc: func [expr] [
   right: reverse copy r
 
   switch op [
-    "+" [addition l r left right]
+    "+" [addition left right]
     "-" [reverse (subtraction l r)]
-    "*" [multiplication l r left right]
-    "**" [exponentiation l r left right]
+    "*" [multiplication left right]
+    "**" [exponentiation left right]
   ]
 ]
 
@@ -274,6 +285,7 @@ forever [
   s: ask "> "
   if s = "" [break]
   result: calc s
+  prin "result: " print result
   ;to-integer
   ;clear zeroes
   print reverse result
