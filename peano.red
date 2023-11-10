@@ -60,11 +60,11 @@ predecessor0: func [index left] [
   li: left/:index
   ;if li = none [append left #"0" li: left/:index] ;sign: "-"
   if li = none [left: "0" return left]
-  prin "li: " print li
+  ;prin "li: " print li
   it: ""
 
   switch li [
-    #"0" [prin "index: " print index
+    #"0" [;prin "index: " print index
           either index > 1 [change left index #"9" it: predecessors (index - 1) left #"1"] [left: "0" return left]]
     #"1" [change left index #"0"]
     #"2" [change left index #"1"]
@@ -83,12 +83,12 @@ predecessor0: func [index left] [
 
 predecessors: func [index left right] [
   if all [left <> "0" right <> #"0"] [
-    prin "index: " print index
-    prin "left before: " print left
-    prin "right: " print right
+    ;prin "index: " print index
+    ;prin "left before: " print left
+    ;prin "right: " print right
     left: predecessor0 index left
-    prin "left after: " print left
-    if left = "0" [print "OK" return left]
+    ;prin "left after: " print left
+    if left = "0" [return left]
  
     switch right [
       ;#"0"
@@ -112,14 +112,14 @@ addition: func [left right] [
 
   ll: length? left
   lr: length? right
-  prin "ll: " print ll
-  prin "lr: " print lr
+  ;prin "ll: " print ll
+  ;prin "lr: " print lr
   while [ll < lr] [
     append left #"0"
     ll: length? left
-    prin "ll: " print ll
+    ;prin "ll: " print ll
   ]
-  prin "left: " print left
+  ;prin "left: " print left
 
   forall right [successors (index? right) left right/1]
 
@@ -131,25 +131,25 @@ subtraction: func [left right] [
   ;either l = "0" [return rejoin [r "-"]] [if r = "0" [return l]]
   ;if any [left = "0" right = "0"] [return left]
 
-  prin "left: " print left
-  prin "right: " print right
+  ;prin "left: " print left
+  ;prin "right: " print right
   
   ll: length? left
   lr: length? right
-  prin "ll: " print ll
-  prin "lr: " print lr
+  ;prin "ll: " print ll
+  ;prin "lr: " print lr
   if lr > ll [return "0"]
   while [lr < ll] [
     right: rejoin ["0" right]
     lr: length? right
-    prin "lr: " print lr
+    ;prin "lr: " print lr
   ]
-  prin "right: " print right
+  ;prin "right: " print right
 
   ;sign: ""
   forall right [
     it: predecessors (index? right) left right/1
-    print "it: " it
+    ;print "it: " it
     if it = "0" [return it]
   ]
 
@@ -161,8 +161,8 @@ multiplication: func [left right] [
   if any [left = "0" right = "0"] [return "0"]
   either left = "1" [return right] [if right = "1" [return left]]
 
-  prin "left: " print left
-  prin "right: " print right
+  ;prin "left: " print left
+  ;prin "right: " print right
 
   adder: copy left
   plus: copy "0"
@@ -172,12 +172,12 @@ multiplication: func [left right] [
     pred: predecessor right/1
    
     while [char? pred] [
-      prin "plus before: " print plus
-      prin "adder before: " print adder
+      ;prin "plus before: " print plus
+      ;prin "adder before: " print adder
       plus: addition plus (copy adder) plus (copy adder)
-      prin "plus after: " print plus
-      prin "adder after: " print adder
-      prin "pred: " print pred
+      ;prin "plus after: " print plus
+      ;prin "adder after: " print adder
+      ;prin "pred: " print pred
       pred: predecessor pred
     ]
   
@@ -191,47 +191,52 @@ exponentiation: func [left right] [
   if any [left = "0" right = "0"] [return "0"]
   either left = "1" [return "1"] [if right = "1" [return left]]
 
-  prin "left: " print left
-  prin "right: " print right
+  ;prin "left: " print left
+  ;prin "right: " print right
 
   total: copy "0"
   sum: copy "1"
   times: copy left
-  off: copy ""
   multiplier: copy "1"
 
   forall right [
-    multi: copy "1"
-    p: predecessor right/1
-    prin "multiplier: " print multiplier
-    prin "off: " print off
-    times: rejoin [off times]
-    prin "times: " print times
+    r: right/1
+    ;prin "r: " print r
+    if all [r <> none r <> #"0"] [
 
-    while [multiplier > "0"] [
+      multi: copy "1"
+      ;prin " " print multi
+      p: predecessor r
+      ;prin "times: " print times
+      ;prin "multiplier: " print multiplier
+      multi-copy: copy multiplier
+    
+      while [(exclude copy multi-copy "0") <> ""] [
+        ;prin "multi-copy: " print multi-copy
 
-    while [char? p] [
-      prin "multi before: " print multi
-      prin "times before: " print times
-      multi: multiplication (copy multi) (copy times) (copy multi) (copy times)
-      prin "multi after: " print multi
-      prin "times after: " print times
-      prin "p: " print p
-      p: predecessor p
+        while [char? p] [
+          ;prin "multi before: " print multi
+          ;prin "times before: " print times
+          multi: multiplication multi (copy times)
+          ;prin "multi after: " print multi
+          ;prin "times after: " print times
+          ;prin "p: " print p
+          p: predecessor p
+        ]
+
+        ;prin "sum before: " print sum
+        sum: multiplication sum (copy multi)
+        ;prin "sum after: " print sum
+
+        multi-copy: subtraction multi-copy (copy "1")
+      ]
+
+      ;prin "total before: " print total
+      total: addition total (copy sum)
+      ;prin "total after: " print total
     ]
 
-    prin "sum before: " print sum
-    sum: multiplication (copy sum) (copy multi) (copy sum) (copy multi)
-    prin "sum after: " print sum
-    prin "total before: " print total
-    total: addition (copy total) (copy sum) (copy total) (copy sum)
-    prin "total after: " print total
     append multiplier "0"
-    append off "0"
-
-    multiplier: "0"
-    ;multiplier: subtraction (copy multiplier) (copy "1") (copy multiplier) (copy "1")
-    ]
   ]
 
   total
@@ -285,8 +290,7 @@ forever [
   s: ask "> "
   if s = "" [break]
   result: calc s
-  prin "result: " print result
-  ;to-integer
+  ;prin "result: " print result
   ;clear zeroes
   print reverse result
 ]
