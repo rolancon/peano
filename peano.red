@@ -225,3 +225,9 @@ forever [
   result: calc s
   print reverse result
 ]
+
+; The code for the compiled version replaces the final block with:
+;    s: system/script/args
+;    if s = "" [quit]
+;    result: calc s
+;    print reverse result
