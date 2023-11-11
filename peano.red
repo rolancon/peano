@@ -219,15 +219,15 @@ calc: func [expr] [
 ; grouping, nesting (parens)
 ; nth root
 
-forever [
-  s: ask "> "
-  if s = "" [break]
+s: system/script/args
+either s = "" [
+  forever [
+    s: ask "> "
+    if s = "" [break]
+    result: calc s
+    print reverse result
+  ]
+] [
   result: calc s
   print reverse result
 ]
-
-; The code for the compiled version replaces the final block with:
-;    s: system/script/args
-;    if s = "" [quit]
-;    result: calc s
-;    print reverse result
