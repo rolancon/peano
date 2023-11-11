@@ -25,10 +25,4 @@ When you use the compiled version (for Windows, macOS or Linux), type the expres
 Skipping the expression will result in an empty result:
 
     >peano
-    
-The code for the compiled version replaces the final block with:
 
-    s: system/script/args
-    if s = "" [quit]
-    result: calc s
-    print reverse result
