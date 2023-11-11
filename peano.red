@@ -1,5 +1,8 @@
 Red []
 
+;https://github.com/red/red/tree/master/environment/console/CLI
+#include %red/environment/console/CLI/input.red
+
 change: func [left index number] [
   left/(:index): number
 ]
@@ -220,14 +223,14 @@ calc: func [expr] [
 ; nth root
 
 s: system/script/args
-either s = "" [
-  forever [
-    s: ask "> "
-    if s = "" [break]
-    result: calc s
-    print reverse result
-  ]
-] [
+either s <> ""  [
   result: calc s
   print reverse result
+] [
+  forever [
+    t: ask "> "
+    if t = "" [break]
+    result: calc t
+    print reverse result
+  ]
 ]
