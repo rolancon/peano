@@ -3,7 +3,9 @@ Peano numbers and math, based on [Peano axioms](https://en.wikipedia.org/wiki/Pe
 
 The numbers have to be postitive integers (whole numbers from 0 upwards), and must be separared from the operators with spaces, but can be of arbitrary length. There is no support for negative numbers, therefore any subtraction that results in a negative number (like _0 - 1_) is shown as _0_.
 
-When you use the script version, type either an addition, a subtraction, a multiplication or an exponentiation after the **>** prompt:
+There are compiled binaries for Windows, macOS and Linux (in the _bin_ directory).
+
+When you call _peano_ without argument, it will show a **>** prompt, after which you can type either an addition, a subtraction, a multiplication or an exponentiation:
 
     > 10 + 10
     20
@@ -17,12 +19,7 @@ When you use the script version, type either an addition, a subtraction, a multi
 
 Simply pressing the Enter (Return) key will exit your session.
 
-When you use the compiled version (for Windows, macOS or Linux), type the expression directly when invoking the _peano_ executable:
+When you include the expression as an argument to the _peano_ executable it will show the result:
 
     >peano 10 + 10
     20
-
-Skipping the expression will result in an empty result:
-
-    >peano
-
